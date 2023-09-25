@@ -1,5 +1,3 @@
-const { TimelineService } = require('wdio-timeline-reporter/timeline-service');
-
 exports.config = {
     //
     // ====================
@@ -25,7 +23,6 @@ exports.config = {
     // will be called from there.
     //
     specs: [
-        // ToDo: define location for spec files here
         './tests/specs/**.js'
     ],
     // Patterns to exclude.
@@ -57,13 +54,14 @@ exports.config = {
     capabilities: [{
         // capabilities for local Appium web tests on an Android Emulator
         "appium:platformName": "Android",
-        "appium:platformVersion": "7.1.1",
-        "appium:automationName": "UIAutomator2",
+        "appium:platformVersion": "13",
+        'appium:automationName': 'UiAutomator2',
         "appium:appPackage": "com.instagram.android",
-        "appium:appActivity": "com.instagram.mainactivity.LauncherActivity",
+        "appium:appActivity": "com.instagram.mainactivity.MainActivity",
         "appium:noReset": "true",
-        "appium:autoGrantPermissions": "true",
-        "appium:forceAppLaunch" : true 
+        "appium:autoGrantPersmissions": "true",
+        "appium:newCommandTimeout": 10,
+        "appium:forceAppLaunch": "true"
     }],
 
     //
@@ -73,7 +71,7 @@ exports.config = {
     // Define all options that are relevant for the WebdriverIO instance here
     //
     // Level of logging verbosity: trace | debug | info | warn | error | silent
-    logLevel: 'error',
+    logLevel: 'info',
     //
     // Set specific log levels per logger
     // loggers:
@@ -113,7 +111,7 @@ exports.config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: [[TimelineService]],
+    services: [],
 
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
@@ -135,10 +133,8 @@ exports.config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter
-    reporters: ['spec', 
-                'dot',
-                ['timeline', { outputDir: './desired_location' }]
-    ],
+    reporters: ['spec'],
+
     
     //
     // Options to be passed to Mocha.
@@ -241,11 +237,8 @@ exports.config = {
      * @param {boolean} result.passed    true if test has passed, otherwise false
      * @param {object}  result.retries   information about spec related retries, e.g. `{ attempts: 0, limit: 0 }`
      */
-    afterTest: async function(test, context, { error, result, duration, passed, retries }) {
-        if (!passed) {
-            await browser.takeScreenshot();
-        }
-    },
+    // afterTest: function(test, context, { error, result, duration, passed, retries }) {
+    // },
 
 
     /**
