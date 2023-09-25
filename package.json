@@ -1,0 +1,16 @@
+{
+  "name": "my-new-project",
+  "type": "module",
+  "devDependencies": {
+    "@wdio/appium-service": "^8.16.12",
+    "@wdio/cli": "^8.16.12",
+    "@wdio/local-runner": "^8.16.12",
+    "@wdio/mocha-framework": "^8.16.12",
+    "@wdio/spec-reporter": "^8.16.12",
+    "appium-uiautomator2-driver": "^2.29.10"
+  },
+  "scripts": {
+    "wdio": "wdio run ./wdio.conf.js",
+    "instagram": "wdio run test/specs/instagram.js"
+  }
+}
