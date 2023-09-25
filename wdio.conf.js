@@ -1,4 +1,6 @@
-export const config = {
+const { TimelineService } = require('wdio-timeline-reporter/timeline-service');
+
+exports.config = {
     //
     // ====================
     // Runner Configuration
@@ -23,7 +25,8 @@ export const config = {
     // will be called from there.
     //
     specs: [
-        './test/specs/**/*.js'
+        // ToDo: define location for spec files here
+        './tests/specs/**.js'
     ],
     // Patterns to exclude.
     exclude: [
@@ -53,11 +56,14 @@ export const config = {
     //
     capabilities: [{
         // capabilities for local Appium web tests on an Android Emulator
-        platformName: 'Android',
-        browserName: 'Chrome',
-        'appium:deviceName': 'Android GoogleAPI Emulator',
-        'appium:platformVersion': '12.0',
-        'appium:automationName': 'UiAutomator2'
+        "appium:platformName": "Android",
+        "appium:platformVersion": "7.1.1",
+        "appium:automationName": "UIAutomator2",
+        "appium:appPackage": "com.instagram.android",
+        "appium:appActivity": "com.instagram.mainactivity.LauncherActivity",
+        "appium:noReset": "true",
+        "appium:autoGrantPermissions": "true",
+        "appium:forceAppLaunch" : true 
     }],
 
     //
@@ -67,7 +73,7 @@ export const config = {
     // Define all options that are relevant for the WebdriverIO instance here
     //
     // Level of logging verbosity: trace | debug | info | warn | error | silent
-    logLevel: 'info',
+    logLevel: 'error',
     //
     // Set specific log levels per logger
     // loggers:
@@ -107,7 +113,7 @@ export const config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: ['appium'],
+    services: [[TimelineService]],
 
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
@@ -129,8 +135,10 @@ export const config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter
-    reporters: ['spec'],
-
+    reporters: ['spec', 
+                'dot',
+                ['timeline', { outputDir: './desired_location' }]
+    ],
     
     //
     // Options to be passed to Mocha.
@@ -233,8 +241,11 @@ export const config = {
      * @param {boolean} result.passed    true if test has passed, otherwise false
      * @param {object}  result.retries   information about spec related retries, e.g. `{ attempts: 0, limit: 0 }`
      */
-    // afterTest: function(test, context, { error, result, duration, passed, retries }) {
-    // },
+    afterTest: async function(test, context, { error, result, duration, passed, retries }) {
+        if (!passed) {
+            await browser.takeScreenshot();
+        }
+    },
 
 
     /**
